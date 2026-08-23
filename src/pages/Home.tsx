@@ -493,6 +493,13 @@ export default function Home({ startAnimation = true }: { startAnimation?: boole
   const [replayKey, setReplayKey] = useState(0);
   const [blurAmount, setBlurAmount] = useState(0);
 
+  // Start the hero animation immediately when the intro splash disappears.
+  useEffect(() => {
+    if (startAnimation) {
+      setReplayKey((k) => k + 1);
+    }
+  }, [startAnimation]);
+
   // Replay the flying-letters animation each time the hero scrolls back into view
   useEffect(() => {
     if (!startAnimation) return;
