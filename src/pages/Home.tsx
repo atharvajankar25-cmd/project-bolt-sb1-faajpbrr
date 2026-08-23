@@ -181,7 +181,7 @@ function EnergyRing({ color, radius, speed, tilt }: { color: string; radius: num
 
 // ─── 3D Hero Scene ──────────────────────────────────────────────
 
-function FlyingLettersHero({ replayKey }: { replayKey: number }) {
+function FlyingLettersHero({ replayKey, active }: { replayKey: number; active: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const letterRefs = useRef<(THREE.Group | null)[]>([]);
   const matRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
@@ -209,6 +209,11 @@ function FlyingLettersHero({ replayKey }: { replayKey: number }) {
   }, []);
 
   useFrame((state) => {
+    if (!active) {
+      startTime.current = 0;
+      return;
+    }
+
     if (startTime.current === 0) startTime.current = state.clock.elapsedTime;
     const t = state.clock.elapsedTime - startTime.current;
 
@@ -329,7 +334,7 @@ function FlyingLettersHero({ replayKey }: { replayKey: number }) {
   const baseScale = Math.min(viewport.width / 8, 1);
 
   return (
-    <group ref={groupRef} scale={baseScale}>
+    <group ref={groupRef} scale={baseScale} visible={active}>
       {/* Per-letter colored lights that follow each letter in */}
       {letterData.map((data, i) => (
         <pointLight
@@ -444,7 +449,7 @@ function FlyingLettersHero({ replayKey }: { replayKey: number }) {
   );
 }
 
-function HeroScene({ replayKey }: { replayKey: number }) {
+function HeroScene({ replayKey, active }: { replayKey: number; active: boolean }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 50 }}
@@ -458,7 +463,7 @@ function HeroScene({ replayKey }: { replayKey: number }) {
 
       <Suspense fallback={null}>
         <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.3}>
-          <FlyingLettersHero replayKey={replayKey} />
+          <FlyingLettersHero replayKey={replayKey} active={active} />
         </Float>
         <Sparkles count={60} scale={9} size={3} speed={0.4} color="#00f0ff" opacity={0.5} />
         <Sparkles count={30} scale={6} size={2} speed={0.6} color="#00ff9d" opacity={0.4} />
@@ -547,7 +552,7 @@ export default function Home({ startAnimation = true }: { startAnimation?: boole
           className="absolute inset-0 z-10 transition-[filter] duration-1000 ease-out"
           style={{ filter: blurAmount > 0 ? `blur(${blurAmount}px)` : 'none' }}
         >
-          <HeroScene replayKey={replayKey} />
+          <HeroScene replayKey={replayKey} active={startAnimation} />
         </div>
 
         {/* Scroll indicator */}
