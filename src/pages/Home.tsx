@@ -488,13 +488,15 @@ const stats = [
 
 // ─── Page Component ─────────────────────────────────────────────
 
-export default function Home() {
+export default function Home({ startAnimation = true }: { startAnimation?: boolean }) {
   const heroRef = useRef<HTMLElement>(null);
   const [replayKey, setReplayKey] = useState(0);
   const [blurAmount, setBlurAmount] = useState(0);
 
   // Replay the flying-letters animation each time the hero scrolls back into view
   useEffect(() => {
+    if (!startAnimation) return;
+
     const el = heroRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
@@ -507,7 +509,7 @@ export default function Home() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [startAnimation]);
 
   // CSS blur overlay: when letters join, blur the canvas for ~1s then sharpen
   useEffect(() => {

@@ -34,7 +34,7 @@ export default function App() {
       <ScrollToTop />
       <PageTransition>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home startAnimation={introDone} />} />
           <Route path="/about" element={<About />} />
           <Route path="/team" element={<Team />} />
           <Route path="/events" element={<Events />} />
