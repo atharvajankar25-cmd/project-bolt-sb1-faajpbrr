@@ -4,6 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/project-bolt-sb1-faajpbrr/',
   plugins: [react()],
   resolve: {
     alias: {
